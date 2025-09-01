@@ -1,4 +1,5 @@
 export type TBoldBlock = {
+  id: string;
   type: 'bold' | 'paragraph';
   data: {
     children: Array<TInlineBlock>;
@@ -6,6 +7,7 @@ export type TBoldBlock = {
 };
 
 export type TQuoteBlock = {
+  id: string;
   type: 'quote';
   data: {
     children: Array<TInlineBlock>;
@@ -14,6 +16,7 @@ export type TQuoteBlock = {
 };
 
 export type THeaderBlock = {
+  id: string;
   type: 'header';
   data: {
     children: Array<TInlineBlock>;
@@ -22,6 +25,7 @@ export type THeaderBlock = {
 };
 
 export type TUnorderedListBlock = {
+  id: string;
   type: 'list';
   data: {
     style: 'unordered';
@@ -30,6 +34,7 @@ export type TUnorderedListBlock = {
 };
 
 export type TOrderedListBlock = {
+  id: string;
   type: 'list';
   data: {
     style: 'ordered';
@@ -38,6 +43,7 @@ export type TOrderedListBlock = {
 };
 
 export type TTextBlock = {
+  id: '';
   type: 'text';
   data: {
     value: string;
@@ -45,6 +51,7 @@ export type TTextBlock = {
 };
 
 export type TImageBlock = {
+  id: string;
   type: 'image';
   data: {
     file: {
@@ -58,14 +65,17 @@ export type TImageBlock = {
 };
 
 export type TCustomBlock = {
+  id: string;
   type: 'custom';
 };
 
 export type TNewlineBlock = {
+  id: string;
   type: 'newline';
 };
 
 export type TItalicBlock = {
+  id: string;
   type: 'italic';
   data: {
     children: Array<TInlineBlock>;
@@ -73,6 +83,7 @@ export type TItalicBlock = {
 };
 
 export type TAnchorBlock = {
+  id: string;
   type: 'anchor';
   data: {
     href: string;

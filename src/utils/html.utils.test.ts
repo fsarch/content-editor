@@ -1,11 +1,29 @@
 import { htmlUtils } from './html.utils';
 import { TInlineBlock } from "./html.type";
+import { nanoid } from 'nanoid';
+
+function stripIds(blocks: any): any {
+  if (Array.isArray(blocks)) {
+    return blocks.map(stripIds);
+  }
+  if (blocks && typeof blocks === 'object') {
+    const { id, ...rest } = blocks;
+    if (rest.data && rest.data.children) {
+      return { ...rest, data: { ...rest.data, children: stripIds(rest.data.children) } };
+    }
+    if (rest.data && rest.data.items) {
+      return { ...rest, data: { ...rest.data, items: stripIds(rest.data.items) } };
+    }
+    return rest;
+  }
+  return blocks;
+}
 
 describe('parseHTMLToBlocks', () => {
   it('should parse a simple paragraph', () => {
     const html = '<p>Hello <b>World</b>!</p>';
     const blocks = htmlUtils.parseHTMLToBlocks(html);
-    expect(blocks).toEqual([
+    expect(stripIds(blocks)).toEqual([
       {
         type: 'paragraph',
         data: {
@@ -173,25 +191,33 @@ describe('parseHTMLToBlocks', () => {
       }
     ]);
   });
+
+  it('should parse data-block-id from html', () => {
+    const html = '<p data-block-id="abc123">Test</p>';
+    const blocks = htmlUtils.parseHTMLToBlocks(html);
+    expect(blocks[0].id).toBe('abc123');
+  });
 });
 
 describe('blocksToHTML', () => {
   it('should convert a simple paragraph with bold and text', () => {
     const blocks: Array<TInlineBlock> = [
       {
+        id: '00000',
         type: 'paragraph',
         data: {
           children: [
-            { type: 'text', data: { value: 'Hello ' } },
+            { id: '', type: 'text', data: { value: 'Hello ' } },
             {
+              id: '00001',
               type: 'bold',
               data: {
                 children: [
-                  { type: 'text', data: { value: 'World' } }
+                  { id: '', type: 'text', data: { value: 'World' } }
                 ]
               }
             },
-            { type: 'text', data: { value: '!' } }
+            { id: '', type: 'text', data: { value: '!' } }
           ]
         }
       }
@@ -202,12 +228,13 @@ describe('blocksToHTML', () => {
   it('should convert a paragraph with a newline', () => {
     const blocks: Array<TInlineBlock> = [
       {
+        id: '00000',
         type: 'paragraph',
         data: {
           children: [
-            { type: 'text', data: { value: 'foo' } },
-            { type: 'newline' },
-            { type: 'text', data: { value: 'bar' } }
+            { id: '', type: 'text', data: { value: 'foo' } },
+            { id: '', type: 'newline' },
+            { id: '', type: 'text', data: { value: 'bar' } }
           ]
         }
       }
@@ -218,15 +245,17 @@ describe('blocksToHTML', () => {
   it('should convert italic block to <i>', () => {
     const blocks: Array<TInlineBlock> = [
       {
+        id: '00000',
         type: 'paragraph',
         data: {
           children: [
-            { type: 'text', data: { value: 'foo' } },
+            { id: '', type: 'text', data: { value: 'foo' } },
             {
+              id: '00001',
               type: 'italic',
               data: {
                 children: [
-                  { type: 'text', data: { value: 'bar' } }
+                  { id: '', type: 'text', data: { value: 'bar' } }
                 ]
               }
             }
@@ -240,16 +269,18 @@ describe('blocksToHTML', () => {
   it('should convert anchor block to <a>', () => {
     const blocks: Array<TInlineBlock> = [
       {
+        id: '00000',
         type: 'paragraph',
         data: {
           children: [
-            { type: 'text', data: { value: 'foo ' } },
+            { id: '', type: 'text', data: { value: 'foo ' } },
             {
+              id: '00001',
               type: 'anchor',
               data: {
                 href: 'https://example.com',
                 children: [
-                  { type: 'text', data: { value: 'bar' } }
+                  { id: '', type: 'text', data: { value: 'bar' } }
                 ]
               }
             }
@@ -258,5 +289,21 @@ describe('blocksToHTML', () => {
       }
     ];
     expect(htmlUtils.blocksToHTML(blocks)).toBe('<p>foo <a href="https://example.com">bar</a></p>');
+  });
+
+  it('should serialize id as data-block-id', () => {
+    const blocks: Array<TInlineBlock> = [
+      {
+        id: 'testid',
+        type: 'paragraph',
+        data: {
+          children: [
+            { id: '', type: 'text', data: { value: 'foo' } }
+          ]
+        }
+      }
+    ];
+    expect(htmlUtils.blocksToHTML(blocks)).toContain('data-block-id="testid"');
+    expect(htmlUtils.blocksToHTML(blocks)).toContain('data-block-id="childid"');
   });
 });
