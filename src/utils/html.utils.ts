@@ -1,7 +1,6 @@
 import { parseDocument, DomUtils } from "htmlparser2";
 import type { ChildNode } from "domhandler";
 import { TInlineBlock } from "./html.type";
-import { generateBlockId } from './id';
 import { inlineBlockUtils } from "./blocks/inline/inline-block.utils";
 import { INLINE_BLOCK_MANAGER } from "./blocks/inline";
 import { THTMLParseContext } from "./blocks/inline/IInlineBlock";
@@ -34,28 +33,6 @@ function parseBlock(node: ChildNode): TInlineBlock | null {
             .map(parseBlock)
             .filter(b => b) as Array<TInlineBlock>
         },
-      };
-
-    case "b":
-      return {
-        id: inlineBlockUtils.getBlockId(node),
-        type: "bold",
-        data: {
-          children: DomUtils.getChildren(node)
-            .map(parseBlock)
-            .filter(b => b) as Array<TInlineBlock>
-        }
-      };
-
-    case "i":
-      return {
-        id: inlineBlockUtils.getBlockId(node),
-        type: "italic",
-        data: {
-          children: DomUtils.getChildren(node)
-            .map(parseBlock)
-            .filter(b => b) as Array<TInlineBlock>
-        }
       };
 
     case "h1": case "h2": case "h3":
@@ -120,23 +97,12 @@ function parseBlock(node: ChildNode): TInlineBlock | null {
         }
       };
 
-    case "br":
-      return {
-        id: inlineBlockUtils.getBlockId(node),
-        type: "newline"
-      };
-
     case "a":
-      return {
-        id: inlineBlockUtils.getBlockId(node),
-        type: "anchor",
-        data: {
-          href: node.attribs?.href || '',
-          children: DomUtils.getChildren(node)
-            .map(parseBlock)
-            .filter(b => b) as Array<TInlineBlock>
-        }
-      };
+      // moved to builder pattern
+      return null;
+    case "br":
+      // moved to builder pattern
+      return null;
 
     default: {
       const htmlParseContext: THTMLParseContext = {
@@ -178,8 +144,6 @@ function blocksToHTML(blocks: TInlineBlock[]): string {
     switch (block.type) {
       case 'paragraph':
         return `<p${idAttr}>${(block.data.children || []).map(blockToHTML).join('')}</p>`;
-      case 'italic':
-        return `<i${idAttr}>${(block.data.children || []).map(blockToHTML).join('')}</i>`;
       case 'header':
         const level = block.data.level || 1;
         return `<h${level}${idAttr}>${(block.data.children || []).map(blockToHTML).join('')}</h${level}>`;
@@ -197,8 +161,6 @@ function blocksToHTML(blocks: TInlineBlock[]): string {
         return `<img${idAttr} src="${block.data.file.url}" alt="${block.data.caption || ''}" />`;
       case 'newline':
         return `<br${idAttr}>`;
-      case 'anchor':
-        return `<a${idAttr} href="${block.data.href}">${(block.data.children || []).map(blockToHTML).join('')}</a>`;
       default: {
         const inlineBlock = INLINE_BLOCK_MANAGER.getByType(block.type);
         if (inlineBlock) {

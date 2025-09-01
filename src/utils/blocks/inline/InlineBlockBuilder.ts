@@ -1,18 +1,18 @@
 import { TBaseBlock } from "../../block.type";
 import type { IInlineBlock, THTMLGenerateContext, THTMLParseContext } from "./IInlineBlock";
-import { ChildNode } from "domhandler";
+import { Element } from "domhandler";
 
 export class InlineBlockBuilder<T extends TBaseBlock> {
-  private htmlToJsonCb: ((html: ChildNode, context: THTMLParseContext) => T) | null = null;
+  private htmlToJsonCb: ((html: Element, context: THTMLParseContext) => T) | null = null;
 
   private jsonToHtmlCb: ((data: T, options: THTMLGenerateContext) => string) | null = null;
 
-  private isSupportedHtmlTagCb: ((node: ChildNode) => boolean) | null = null;
+  private isSupportedHtmlTagCb: ((node: Element) => boolean) | null = null;
 
   constructor(private readonly type: string) {
   }
 
-  htmlToJson(cb: (html: ChildNode, context: THTMLParseContext) => T): this {
+  htmlToJson(cb: (html: Element, context: THTMLParseContext) => T): this {
     this.htmlToJsonCb = cb;
 
     return this;
@@ -24,7 +24,7 @@ export class InlineBlockBuilder<T extends TBaseBlock> {
     return this;
   }
 
-  isSupportedHtmlTag(cb: (node: ChildNode) => boolean): this {
+  isSupportedHtmlTag(cb: (node: Element) => boolean): this {
     this.isSupportedHtmlTagCb = cb;
 
     return this;
@@ -56,11 +56,11 @@ export class InlineBlockBuilder<T extends TBaseBlock> {
         return jsonToHtmlCb(data, ctx);
       }
 
-      fromHTML(value: ChildNode, ctx: THTMLParseContext): T {
-        return htmlToJsonCb(value, ctx);
+      fromHTML(node: Element, ctx: THTMLParseContext): T {
+        return htmlToJsonCb(node, ctx);
       }
 
-      isSupportedHtmlTag(node: ChildNode) {
+      isSupportedHtmlTag(node: Element) {
         return isSupportedHtmlTagCb(node);
       }
     }

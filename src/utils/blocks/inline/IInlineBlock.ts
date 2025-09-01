@@ -1,5 +1,6 @@
+import type { Element } from "domhandler";
+
 import type { TBaseBlock } from "../../block.type";
-import type { ChildNode } from "domhandler/lib/esm";
 import type { TInlineBlock } from "../../html.type";
 
 export type THTMLGenerateContext = {
@@ -9,7 +10,7 @@ export type THTMLGenerateContext = {
 };
 
 export type THTMLParseContext = {
-  parseChildren: (node: ChildNode) => Array<TInlineBlock>;
+  parseChildren: (node: Element) => Array<TInlineBlock>;
 };
 
 export interface IInlineBlock<T extends TBaseBlock> {
@@ -17,7 +18,7 @@ export interface IInlineBlock<T extends TBaseBlock> {
 
   toHTML(data: T, ctx: THTMLGenerateContext): string;
 
-  fromHTML(value: ChildNode, ctx: THTMLParseContext): T;
+  fromHTML(value: Element, ctx: THTMLParseContext): T;
 
-  isSupportedHtmlTag(node: ChildNode): boolean;
+  isSupportedHtmlTag(node: Element): boolean;
 }
