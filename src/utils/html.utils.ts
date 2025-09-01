@@ -199,8 +199,6 @@ function blocksToHTML(blocks: TInlineBlock[]): string {
         return `<br${idAttr}>`;
       case 'anchor':
         return `<a${idAttr} href="${block.data.href}">${(block.data.children || []).map(blockToHTML).join('')}</a>`;
-      case 'custom':
-        return '';
       default: {
         const inlineBlock = INLINE_BLOCK_MANAGER.getByType(block.type);
         if (inlineBlock) {

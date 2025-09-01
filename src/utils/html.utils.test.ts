@@ -1,6 +1,5 @@
 import { htmlUtils } from './html.utils';
 import { TInlineBlock } from "./html.type";
-import { nanoid } from 'nanoid';
 
 function stripIds(blocks: any): any {
   if (Array.isArray(blocks)) {
@@ -47,10 +46,15 @@ describe('parseHTMLToBlocks', () => {
   it('should parse headers', () => {
     const html = '<h2>Title</h2>';
     const blocks = htmlUtils.parseHTMLToBlocks(html);
-    expect(blocks).toEqual([
+    expect(stripIds(blocks)).toEqual([
       {
         type: 'header',
-        data: { text: 'Title', level: 2 }
+        data: {
+          children: [
+            { type: 'text', data: { value: 'Title' } }
+          ],
+          level: 2
+        }
       }
     ]);
   });
@@ -58,10 +62,16 @@ describe('parseHTMLToBlocks', () => {
   it('should parse unordered lists', () => {
     const html = '<ul><li>One</li><li>Two</li></ul>';
     const blocks = htmlUtils.parseHTMLToBlocks(html);
-    expect(blocks).toEqual([
+    expect(stripIds(blocks)).toEqual([
       {
         type: 'list',
-        data: { style: 'unordered', items: ['One', 'Two'] }
+        data: {
+          style: 'unordered',
+          children: [
+            { type: 'text', data: { value: 'One' } },
+            { type: 'text', data: { value: 'Two' } }
+          ]
+        }
       }
     ]);
   });
@@ -69,10 +79,16 @@ describe('parseHTMLToBlocks', () => {
   it('should parse ordered lists', () => {
     const html = '<ol><li>First</li><li>Second</li></ol>';
     const blocks = htmlUtils.parseHTMLToBlocks(html);
-    expect(blocks).toEqual([
+    expect(stripIds(blocks)).toEqual([
       {
         type: 'list',
-        data: { style: 'ordered', items: ['First', 'Second'] }
+        data: {
+          style: 'ordered',
+          children: [
+            { type: 'text', data: { value: 'First' } },
+            { type: 'text', data: { value: 'Second' } }
+          ]
+        }
       }
     ]);
   });
@@ -80,10 +96,14 @@ describe('parseHTMLToBlocks', () => {
   it('should parse blockquotes', () => {
     const html = '<blockquote>Quote</blockquote>';
     const blocks = htmlUtils.parseHTMLToBlocks(html);
-    expect(blocks).toEqual([
+    expect(stripIds(blocks)).toEqual([
       {
         type: 'quote',
-        data: { text: 'Quote', caption: '' }
+        data: {
+          children: [
+            { type: 'text', data: { value: 'Quote' } }
+          ]
+        }
       }
     ]);
   });
@@ -91,7 +111,7 @@ describe('parseHTMLToBlocks', () => {
   it('should parse images', () => {
     const html = '<img src="/img.png" alt="desc" />';
     const blocks = htmlUtils.parseHTMLToBlocks(html);
-    expect(blocks).toEqual([
+    expect(stripIds(blocks)).toEqual([
       {
         type: 'image',
         data: {
@@ -108,20 +128,29 @@ describe('parseHTMLToBlocks', () => {
   it('should ignore unknown tags', () => {
     const html = '<foo>bar</foo>';
     const blocks = htmlUtils.parseHTMLToBlocks(html);
-    expect(blocks).toEqual([]);
+    expect(stripIds(blocks)).toEqual([]);
   });
 
   it('should handle multiple blocks', () => {
     const html = '<h1>Headline</h1><p>Text</p>';
     const blocks = htmlUtils.parseHTMLToBlocks(html);
-    expect(blocks).toEqual([
+    expect(stripIds(blocks)).toEqual([
       {
         type: 'header',
-        data: { text: 'Headline', level: 1 }
+        data: {
+          children: [
+            { type: 'text', data: { value: 'Headline' } }
+          ],
+          level: 1
+        }
       },
       {
         type: 'paragraph',
-        data: { text: 'Text' }
+        data: {
+          children: [
+            { type: 'text', data: { value: 'Text' } }
+          ]
+        }
       }
     ]);
   });
@@ -129,7 +158,7 @@ describe('parseHTMLToBlocks', () => {
   it('should parse <br> as newline block', () => {
     const html = '<p>foo<br>bar</p>';
     const blocks = htmlUtils.parseHTMLToBlocks(html);
-    expect(blocks).toEqual([
+    expect(stripIds(blocks)).toEqual([
       {
         type: 'paragraph',
         data: {
@@ -146,7 +175,7 @@ describe('parseHTMLToBlocks', () => {
   it('should parse <i> as italic block', () => {
     const html = '<p>Hello <i>World</i>!</p>';
     const blocks = htmlUtils.parseHTMLToBlocks(html);
-    expect(blocks).toEqual([
+    expect(stripIds(blocks)).toEqual([
       {
         type: 'paragraph',
         data: {
@@ -170,7 +199,7 @@ describe('parseHTMLToBlocks', () => {
   it('should parse <a> as anchor block', () => {
     const html = '<p>Go to <a href="https://example.com">Example</a>!</p>';
     const blocks = htmlUtils.parseHTMLToBlocks(html);
-    expect(blocks).toEqual([
+    expect(stripIds(blocks)).toEqual([
       {
         type: 'paragraph',
         data: {
