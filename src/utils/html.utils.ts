@@ -97,13 +97,6 @@ function parseBlock(node: ChildNode): TInlineBlock | null {
         }
       };
 
-    case "a":
-      // moved to builder pattern
-      return null;
-    case "br":
-      // moved to builder pattern
-      return null;
-
     default: {
       const htmlParseContext: THTMLParseContext = {
         parseChildren: (node: ChildNode) => {
@@ -118,9 +111,7 @@ function parseBlock(node: ChildNode): TInlineBlock | null {
         return null;
       }
 
-      block.fromHTML(node, htmlParseContext);
-
-      return null;
+      return block.fromHTML(node, htmlParseContext);
     }
   }
 }
@@ -128,8 +119,6 @@ function parseBlock(node: ChildNode): TInlineBlock | null {
 function parseHTMLToBlocks(html: string) {
   const doc = parseDocument(html);
   const bodyChildren = DomUtils.getChildren(doc);
-
-  console.log('docs', doc, bodyChildren);
 
   const blocks = bodyChildren
     .map(parseBlock)
@@ -159,8 +148,6 @@ function blocksToHTML(blocks: TInlineBlock[]): string {
         return block.data.value;
       case 'image':
         return `<img${idAttr} src="${block.data.file.url}" alt="${block.data.caption || ''}" />`;
-      case 'newline':
-        return `<br${idAttr}>`;
       default: {
         const inlineBlock = INLINE_BLOCK_MANAGER.getByType(block.type);
         if (inlineBlock) {

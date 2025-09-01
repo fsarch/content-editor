@@ -15,7 +15,6 @@ export function fromEditorJs(data?: OutputData): TContentValue | null {
     blocks: data.blocks.map((block) => {
       if (block.type === 'paragraph') {
         const parsedHTML = htmlUtils.parseHTMLToBlocks(block.data.text);
-        console.log('html', parsedHTML, htmlUtils.blocksToHTML(parsedHTML));
 
         return {
           ...block,
