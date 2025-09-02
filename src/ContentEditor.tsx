@@ -24,11 +24,11 @@ export const ContentEditor: React.FC<{ onChange: (data: any) => void; value: TCo
       data: toEditorJs(value) ?? undefined,
       holder: element,
       tools: {
-        List: {
+        list: {
           class: EditorjsList,
           inlineToolbar: true,
           config: {
-            defaultStyle: 'unordered'
+            defaultStyle: 'unordered',
           },
         },
       },

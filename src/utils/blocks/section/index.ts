@@ -2,6 +2,7 @@ import { SectionBlockManager } from "./SectionBlockManager";
 import { SectionBlockMapperBuilder } from "./SectionBlockMapperBuilder";
 import { OutputBlockData } from "@editorjs/editorjs";
 import { TParagraphBlock } from "./section-block.type";
+import { ListSection } from "./ListSection";
 
 export const SECTION_BLOCK_MANAGER = new SectionBlockManager([
   new SectionBlockMapperBuilder<TParagraphBlock>('paragraph')
@@ -16,9 +17,7 @@ export const SECTION_BLOCK_MANAGER = new SectionBlockManager([
         },
       };
     })
-    .toEditorJs((block, { serializeInlineBlocks }): OutputBlockData => {
-      console.log(block.data);
-
+    .toEditorJs((block: TParagraphBlock, { serializeInlineBlocks }): OutputBlockData => {
       return {
         id: block.id,
         type: 'paragraph',
@@ -28,4 +27,5 @@ export const SECTION_BLOCK_MANAGER = new SectionBlockManager([
       };
     })
     .build(),
+  ListSection,
 ]);

@@ -4,9 +4,9 @@ import { TSectionBlock } from "./section-block.type";
 import { TBaseBlock } from "../../block.type";
 
 export class SectionBlockMapperBuilder<T extends TBaseBlock> {
-  private fromEditorJsCb: ((data: OutputBlockData, ctx: TFromEditorJsContext) => TSectionBlock) | null = null;
+  private fromEditorJsCb: ((data: OutputBlockData, ctx: TFromEditorJsContext) => T) | null = null;
 
-  private toEditorJsCb: ((data: TSectionBlock, ctx: TToEditorJsContext) => OutputBlockData) | null = null;
+  private toEditorJsCb: ((data: T, ctx: TToEditorJsContext) => OutputBlockData) | null = null;
 
   constructor(
     private readonly type: string,
@@ -14,13 +14,13 @@ export class SectionBlockMapperBuilder<T extends TBaseBlock> {
   ) {
   }
 
-  toEditorJs(cb: (data: TSectionBlock, ctx: TToEditorJsContext) => OutputBlockData): this {
+  toEditorJs(cb: (data: T, ctx: TToEditorJsContext) => OutputBlockData): this {
     this.toEditorJsCb = cb;
 
     return this;
   }
 
-  fromEditorJs(cb: (data: OutputBlockData, ctx: TFromEditorJsContext) => TSectionBlock): this {
+  fromEditorJs(cb: (data: OutputBlockData, ctx: TFromEditorJsContext) => T): this {
     this.fromEditorJsCb = cb;
 
     return this;
@@ -50,11 +50,11 @@ export class SectionBlockMapperBuilder<T extends TBaseBlock> {
 
       editorJsType = editorJsType;
 
-      toEditorJs(section: TSectionBlock, ctx: TToEditorJsContext): OutputBlockData {
+      toEditorJs(section: T, ctx: TToEditorJsContext): OutputBlockData {
         return toEditorJsCb(section, ctx);
       }
 
-      fromEditorJs(data: OutputBlockData, ctx: TFromEditorJsContext) {
+      fromEditorJs(data: OutputBlockData, ctx: TFromEditorJsContext): T {
         return fromEditorJsCb(data, ctx);
       }
     }

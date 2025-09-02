@@ -8,4 +8,18 @@ export type TParagraphBlock = {
   };
 };
 
-export type TSectionBlock = TParagraphBlock;
+export type TListBlockChildren = {
+  content: Array<TInlineBlock>;
+  childList?: TListBlock;
+};
+
+export type TListBlock = {
+  id: string;
+  type: 'list';
+  data: {
+    style: 'unordered' | 'ordered';
+    children: Array<TListBlockChildren>;
+  };
+}
+
+export type TSectionBlock = TParagraphBlock | TListBlock;

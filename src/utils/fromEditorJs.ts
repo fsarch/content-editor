@@ -17,6 +17,7 @@ export function fromEditorJs(data?: OutputData): TContentValue | null {
     blocks: data.blocks.map((block) => {
       const mapper = SECTION_BLOCK_MANAGER.getByEditorJsType(block.type);
       if (!mapper) {
+        console.log('unknown mapper for block type', block.type);
         return null;
       }
 

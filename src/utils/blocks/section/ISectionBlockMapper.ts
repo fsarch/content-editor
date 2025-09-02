@@ -1,6 +1,5 @@
 import type { TBaseBlock } from "../../block.type";
 import type { OutputBlockData } from "@editorjs/editorjs";
-import { TSectionBlock } from "./section-block.type";
 import { TInlineBlock } from "../../html.type";
 
 export type TToEditorJsContext = {
@@ -16,7 +15,7 @@ export interface ISectionBlockMapper<T extends TBaseBlock> {
 
   type: string;
 
-  fromEditorJs(data: OutputBlockData, ctx: TFromEditorJsContext): TSectionBlock;
+  fromEditorJs(data: OutputBlockData, ctx: TFromEditorJsContext): T;
 
-  toEditorJs(section: TSectionBlock, ctx: TToEditorJsContext): OutputBlockData;
+  toEditorJs(section: T, ctx: TToEditorJsContext): OutputBlockData;
 }
