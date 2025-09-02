@@ -1,6 +1,6 @@
 import { OutputData } from "@editorjs/editorjs/types/data-formats/output-data";
 import { TContentValue } from "../types/TContentValue.type";
-import { htmlUtils } from "./html.utils";
+import { inlineBlockUtils } from "./blocks/inline/inline-block.utils";
 
 export function fromEditorJs(data?: OutputData): TContentValue | null {
   if (!data) {
@@ -14,7 +14,7 @@ export function fromEditorJs(data?: OutputData): TContentValue | null {
     },
     blocks: data.blocks.map((block) => {
       if (block.type === 'paragraph') {
-        const parsedHTML = htmlUtils.parseHTMLToBlocks(block.data.text);
+        const parsedHTML = inlineBlockUtils.parseInlineBlocks(block.data.text);
 
         return {
           ...block,

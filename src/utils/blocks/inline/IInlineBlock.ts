@@ -1,4 +1,4 @@
-import type { Element } from "domhandler";
+import type { ChildNode, Element } from "domhandler";
 
 import type { TBaseBlock } from "../../block.type";
 import type { TInlineBlock } from "../../html.type";
@@ -20,5 +20,5 @@ export interface IInlineBlock<T extends TBaseBlock> {
 
   fromHTML(value: Element, ctx: THTMLParseContext): T;
 
-  isSupportedHtmlTag(node: Element): boolean;
+  isSupportedHtmlTag(node: ChildNode): boolean;
 }

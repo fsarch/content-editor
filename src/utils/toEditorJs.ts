@@ -1,6 +1,6 @@
 import { TContentValue } from "../types/TContentValue.type";
 import { OutputData } from "@editorjs/editorjs/types/data-formats/output-data";
-import { htmlUtils } from "./html.utils";
+import { inlineBlockUtils } from "./blocks/inline/inline-block.utils";
 
 export function toEditorJs(data?: TContentValue): OutputData | null {
   if (!data) {
@@ -13,7 +13,7 @@ export function toEditorJs(data?: TContentValue): OutputData | null {
         return {
           ...block,
           data: {
-            text: htmlUtils.blocksToHTML(block.data),
+            text: inlineBlockUtils.serializeAsHtml(block.data),
           },
         };
       }
