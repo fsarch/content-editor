@@ -1,9 +1,9 @@
-import { OutputData } from "@editorjs/editorjs/types/data-formats/output-data";
+import type { TSectionBlock } from "../utils/blocks/section/section-block.type";
 
 export type TContentValue = {
   meta: {
     version?: string;
     timestamp?: number;
   };
-  blocks: OutputData['blocks'];
+  blocks: Array<TSectionBlock>;
 };
