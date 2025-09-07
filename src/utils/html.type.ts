@@ -83,6 +83,14 @@ export type TItalicBlock = {
   };
 };
 
+export type TUnderlineBlock = {
+  id: string;
+  type: 'underline';
+  data: {
+    children: Array<TInlineBlock>;
+  };
+};
+
 export type TAnchorBlock = {
   id: string;
   type: 'anchor';
@@ -103,4 +111,5 @@ export type TInlineBlock =
   | TImageBlock
   | TCustomBlock
   | TNewlineBlock
+  | TUnderlineBlock
   | TAnchorBlock;

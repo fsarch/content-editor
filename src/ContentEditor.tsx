@@ -7,6 +7,8 @@ import { fromEditorJs } from "./utils/fromEditorJs";
 import { toEditorJs } from "./utils/toEditorJs";
 
 import EditorjsList from '@editorjs/list';
+import Underline from "@editorjs/underline";
+import Heading from "@editorjs/header";
 
 export const ContentEditor: React.FC<{ onChange: (data: any) => void; value: TContentValue }> = ({ onChange, value }) => {
   const editorRef = useRef<HTMLDivElement>(null);
@@ -25,12 +27,14 @@ export const ContentEditor: React.FC<{ onChange: (data: any) => void; value: TCo
       holder: element,
       tools: {
         list: {
-          class: EditorjsList,
+          class: EditorjsList as any,
           inlineToolbar: true,
           config: {
             defaultStyle: 'unordered',
           },
         },
+        underline: Underline,
+        headline: Heading,
       },
       onChange: async () => {
         const data = await instance.save();

@@ -1,6 +1,6 @@
 import { InlineBlockManager } from "./InlineBlockManager";
 import { InlineBlockBuilder } from "./InlineBlockBuilder";
-import { TBoldBlock, TItalicBlock, TAnchorBlock, TNewlineBlock } from "../../html.type";
+import { TBoldBlock, TItalicBlock, TAnchorBlock, TNewlineBlock, TUnderlineBlock } from "../../html.type";
 import { inlineBlockUtils } from "./inline-block.utils";
 
 export const INLINE_BLOCK_MANAGER = new InlineBlockManager([
@@ -32,6 +32,21 @@ export const INLINE_BLOCK_MANAGER = new InlineBlockManager([
     }))
     .jsonToHTML((value, context) => {
       return `<i ${context.getIdAttribute()}>${(value.data.children || []).map(context.serializeElement).join('')}</i>`;
+    })
+    .build(),
+  new InlineBlockBuilder<TUnderlineBlock>('underline')
+    .isSupportedHtmlTag((node) => {
+      return node.type === "tag" && node.name === "u";
+    })
+    .htmlToJson((node, context) => ({
+      id: inlineBlockUtils.getBlockId(node),
+      type: "underline",
+      data: {
+        children: context.parseChildren(node),
+      },
+    }))
+    .jsonToHTML((value, context) => {
+      return `<u ${context.getIdAttribute()}>${(value.data.children || []).map(context.serializeElement).join('')}</u>`;
     })
     .build(),
   new InlineBlockBuilder<TAnchorBlock>('anchor')

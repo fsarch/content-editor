@@ -3,6 +3,7 @@ import { SectionBlockMapperBuilder } from "./SectionBlockMapperBuilder";
 import { OutputBlockData } from "@editorjs/editorjs";
 import { TParagraphBlock } from "./section-block.type";
 import { ListSection } from "./ListSection";
+import { HeadlineSection } from "./HeadlineSection";
 
 export const SECTION_BLOCK_MANAGER = new SectionBlockManager([
   new SectionBlockMapperBuilder<TParagraphBlock>('paragraph')
@@ -28,4 +29,5 @@ export const SECTION_BLOCK_MANAGER = new SectionBlockManager([
     })
     .build(),
   ListSection,
+  HeadlineSection,
 ]);

@@ -1,4 +1,4 @@
-import type { TInlineBlock } from "../../html.type";
+import { TInlineBlock, TTextBlock } from "../../html.type";
 
 export type TParagraphBlock = {
   id: string;
@@ -22,4 +22,13 @@ export type TListBlock = {
   };
 }
 
-export type TSectionBlock = TParagraphBlock | TListBlock;
+export type THeadlineSection = {
+  id: string;
+  type: 'headline';
+  data: {
+    children: Array<TTextBlock>;
+    level: number;
+  };
+};
+
+export type TSectionBlock = TParagraphBlock | TListBlock | THeadlineSection;
