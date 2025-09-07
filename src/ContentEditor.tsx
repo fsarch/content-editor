@@ -9,8 +9,18 @@ import { toEditorJs } from "./utils/toEditorJs";
 import EditorjsList from '@editorjs/list';
 import Underline from "@editorjs/underline";
 import Heading from "@editorjs/header";
+import { BlockManager } from "./utils/blocks/BlockManager";
+import { BLOCK_MANAGER_INSTANCE } from "./utils/blocks";
 
-export const ContentEditor: React.FC<{ onChange: (data: any) => void; value: TContentValue }> = ({ onChange, value }) => {
+export const ContentEditor: React.FC<{
+  onChange: (data: any) => void;
+  value: TContentValue;
+  blockManager?: BlockManager;
+}> = ({
+  onChange,
+  value,
+  blockManager = BLOCK_MANAGER_INSTANCE,
+}) => {
   const editorRef = useRef<HTMLDivElement>(null);
   const instanceRef = useRef<EditorJS | null>(null);
 
@@ -23,7 +33,9 @@ export const ContentEditor: React.FC<{ onChange: (data: any) => void; value: TCo
     root.appendChild(element);
 
     const instance = new EditorJS({
-      data: toEditorJs(value) ?? undefined,
+      data: toEditorJs(value, {
+        blockManager,
+      }) ?? undefined,
       holder: element,
       tools: {
         list: {
@@ -38,7 +50,7 @@ export const ContentEditor: React.FC<{ onChange: (data: any) => void; value: TCo
       },
       onChange: async () => {
         const data = await instance.save();
-        onChange(fromEditorJs(data));
+        onChange(fromEditorJs(data, { blockManager }));
       },
     });
 

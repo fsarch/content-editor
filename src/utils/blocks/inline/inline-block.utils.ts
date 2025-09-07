@@ -3,15 +3,15 @@ import { THTMLParseContext } from "./IInlineBlock";
 import type { ChildNode } from "domhandler";
 import { DomUtils } from "htmlparser2";
 import { TInlineBlock } from "../../html.type";
-import { INLINE_BLOCK_MANAGER } from "./index";
 import { nodeUtils } from "../../node.utils";
 import { parseDocument } from "htmlparser2";
+import { TEditorContext } from "../../../types/TEditorContext";
 
 function getBlockId(node: any): string {
   return node.attribs?.['data-block-id'] || generateBlockId();
 }
 
-function parseBlockBase(node: ChildNode): TInlineBlock | null {
+function parseBlockBase(node: ChildNode, ctx: TEditorContext): TInlineBlock | null {
   if (nodeUtils.isTextNode(node)) {
     return {
       id: '',
@@ -22,7 +22,7 @@ function parseBlockBase(node: ChildNode): TInlineBlock | null {
     };
   }
 
-  const block = INLINE_BLOCK_MANAGER.getByHTMLTag(node);
+  const block = ctx.blockManager.inline.getByHTMLTag(node);
   if (!block) {
     return null;
   }
@@ -34,7 +34,7 @@ function parseBlockBase(node: ChildNode): TInlineBlock | null {
   const htmlParseContext: THTMLParseContext = {
     parseChildren: (node: ChildNode) => {
       return DomUtils.getChildren(node)
-        .map(parseBlockBase)
+        .map((b) => parseBlockBase(b, ctx))
         .filter(b => b) as Array<TInlineBlock>;
     },
   }
@@ -42,38 +42,41 @@ function parseBlockBase(node: ChildNode): TInlineBlock | null {
   return block.fromHTML(node, htmlParseContext);
 }
 
-function parseInlineBlocks(html: string) {
+function parseInlineBlocks(html: string, ctx: TEditorContext) {
   const doc = parseDocument(html);
   const bodyChildren = DomUtils.getChildren(doc);
 
   const blocks = bodyChildren
-    .map(parseBlockBase)
+    .map((b) => parseBlockBase(b, ctx))
     .filter(b => b !== null);
 
   return blocks;
 }
 
-function serializeAsHtmlBase(block: TInlineBlock): string {
+function serializeAsHtmlBase(block: TInlineBlock, ctx: TEditorContext): string {
   if (block.type === 'text') {
     return block.data.value || '';
   }
 
   const idAttr = ` data-block-id="${block.id}"`;
 
-  const inlineBlock = INLINE_BLOCK_MANAGER.getByType(block.type);
+  const inlineBlock = ctx.blockManager.inline.getByType(block.type);
   if (inlineBlock) {
     return inlineBlock.toHTML(block, {
       mode: 'view',
       getIdAttribute: () => idAttr,
-      serializeElement: serializeAsHtmlBase,
+      serializeElement: (block: TInlineBlock) => serializeAsHtmlBase(block, ctx),
     });
   }
 
   return '';
 }
 
-function serializeAsHtml(blocks: Array<TInlineBlock>): string {
-  return blocks.map(serializeAsHtmlBase).filter(b => b).join('');
+function serializeAsHtml(blocks: Array<TInlineBlock>, ctx: TEditorContext): string {
+  return blocks
+    .map((b) => serializeAsHtmlBase(b, ctx))
+    .filter(b => b)
+    .join('');
 }
 
 export const inlineBlockUtils = {
