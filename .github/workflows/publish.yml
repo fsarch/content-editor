@@ -38,3 +38,4 @@ jobs:
           echo "//npm.pkg.github.com/:_authToken=${NODE_AUTH_TOKEN}" > ~/.npmrc
           npm publish --registry https://npm.pkg.github.com/
 
+

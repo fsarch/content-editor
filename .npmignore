@@ -1,0 +1,7 @@
+/example
+/src
+/.github
+/.idea
+/jest.config.js
+/.npmrc
+/tsconfig.json
