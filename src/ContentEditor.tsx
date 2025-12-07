@@ -11,6 +11,7 @@ import Underline from "@editorjs/underline";
 import Heading from "@editorjs/header";
 import { BlockManager } from "./utils/blocks/BlockManager";
 import { BLOCK_MANAGER_INSTANCE } from "./utils/blocks";
+import editorJsDe from "./i18n/editorjs.de";
 
 export const ContentEditor: React.FC<{
   onChange: (data: any) => void;
@@ -34,9 +35,7 @@ export const ContentEditor: React.FC<{
 
     const instance = new EditorJS({
       i18n: {
-        messages: {
-
-        },
+        messages: editorJsDe,
       },
       data: toEditorJs(value, {
         blockManager,
@@ -60,6 +59,8 @@ export const ContentEditor: React.FC<{
       },
     });
 
+    instanceRef.current = instance;
+
     return () => {
       (async () => {
         await instance.isReady;
@@ -74,4 +75,3 @@ export const ContentEditor: React.FC<{
 
   return <div ref={editorRef} />;
 };
-
