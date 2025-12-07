@@ -11,7 +11,8 @@
     "test": "NODE_OPTIONS='--experimental-vm-modules' jest",
     "start": "tsc --watch",
     "build": "tsc",
-    "prepare": "npm run build"
+    "prepare": "npm run build",
+    "prepublishOnly": "npm run build"
   },
   "repository": {
     "type": "git",
