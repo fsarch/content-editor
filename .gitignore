@@ -348,3 +348,8 @@ $RECYCLE.BIN/
 *.lnk
 
 # End of https://www.toptal.com/developers/gitignore/api/intellij,windows,linux,macos,node,visualstudiocode
+
+# Ignore JetBrains Copilot migration/config files only (keep other .idea files tracked if desired)
+.idea/copilot.data.migration.*.xml
+.idea/**/copilot.data.migration.*.xml
+.idea/**/copilot.*
