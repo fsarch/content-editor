@@ -1,6 +1,5 @@
 import { OutputBlockData } from "@editorjs/editorjs";
 import { ISectionBlockMapper, TFromEditorJsContext, TToEditorJsContext } from "./ISectionBlockMapper";
-import { TSectionBlock } from "./section-block.type";
 import { TBaseBlock } from "../../block.type";
 
 export class SectionBlockMapperBuilder<T extends TBaseBlock> {

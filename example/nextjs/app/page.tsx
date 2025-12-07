@@ -2,9 +2,37 @@
 
 import React, { useCallback } from 'react';
 import dynamic from 'next/dynamic';
-import { TContentValue } from "../../../src/types/TContentValue.type";
+import type { TContentValue } from "../../../src/types/TContentValue.type";
 
-const ContentEditor = dynamic(async () => (await import('@fsarch/content-editor')).ContentEditor, { ssr: false });
+const ContentEditor = dynamic(async () => (await import('./_components/browser-only-editor.component')).default, { ssr: false });
+
+
+// BLOCK_MANAGER_INSTANCE.section.register(
+//   new CustomSectionBlockBuilder({
+//     type: 'custom-block',
+//   })
+//     .setMapper(
+//       (builder) => builder
+//         .toEditorJs((data) => {
+//           return {
+//             id: data.id,
+//             type: 'custom-block',
+//             data: {
+//               text: 'This is a custom block'
+//             },
+//           };
+//         })
+//         .fromEditorJs((data) => {
+//           return {
+//             id: data.id ?? '',
+//             type: 'custom-block',
+//             data: { text: 'This is a custom block' },
+//           };
+//         })
+//         .build()
+//     )
+//     .build()
+// )
 
 export default function Home() {
   const [value, setValue] = React.useState<TContentValue | null>(null);

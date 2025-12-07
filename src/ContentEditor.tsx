@@ -14,7 +14,7 @@ import { BLOCK_MANAGER_INSTANCE } from "./utils/blocks";
 
 export const ContentEditor: React.FC<{
   onChange: (data: any) => void;
-  value: TContentValue;
+  value?: TContentValue;
   blockManager?: BlockManager;
 }> = ({
   onChange,
@@ -33,11 +33,17 @@ export const ContentEditor: React.FC<{
     root.appendChild(element);
 
     const instance = new EditorJS({
+      i18n: {
+        messages: {
+
+        },
+      },
       data: toEditorJs(value, {
         blockManager,
       }) ?? undefined,
       holder: element,
       tools: {
+        ...blockManager.section.getAllBlocks(),
         list: {
           class: EditorjsList as any,
           inlineToolbar: true,

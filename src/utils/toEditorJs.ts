@@ -4,14 +4,14 @@ import { inlineBlockUtils } from "./blocks/inline/inline-block.utils";
 import { TSectionBlock } from "./blocks/section/section-block.type";
 import { TEditorContext } from "../types/TEditorContext";
 
-export function toEditorJs(data: TContentValue, ctx: TEditorContext): OutputData | null {
+export function toEditorJs(data: TContentValue | undefined, ctx: TEditorContext): OutputData | null {
   if (!data) {
     return null;
   }
 
   return {
     blocks: data.blocks.map((block) => {
-      const mapper = ctx.blockManager.section.getByType(block.type);
+      const mapper = ctx.blockManager.section.getMapperByType(block.type);
       if (!mapper) {
         return null;
       }

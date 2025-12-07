@@ -7,7 +7,7 @@ import { HeadlineSection } from "./HeadlineSection";
 
 export const registerDefaultSectionBlocks = (sectionBlockManager: SectionBlockManager) => {
   // PARAGRAPH
-  sectionBlockManager.register(
+  sectionBlockManager.registerBlockMapper(
     new SectionBlockMapperBuilder<TParagraphBlock>('paragraph')
       .fromEditorJs((block, { parseInlineBlocks }) => {
         const parsedHTML = parseInlineBlocks(block.data.text);
@@ -32,6 +32,6 @@ export const registerDefaultSectionBlocks = (sectionBlockManager: SectionBlockMa
       .build()
   );
 
-  sectionBlockManager.register(ListSection);
-  sectionBlockManager.register(HeadlineSection);
+  sectionBlockManager.registerBlockMapper(ListSection);
+  sectionBlockManager.registerBlockMapper(HeadlineSection);
 };
